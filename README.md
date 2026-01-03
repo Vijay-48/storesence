@@ -48,8 +48,8 @@ StoreSence is a modern "Scan & Go" mobile shopping application built with Flutte
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/Vijay-48/store-sence.git
-    cd store-sence
+    git clone https://github.com/Vijay-48/storesence.git
+    cd storesence
     ```
 
 2.  **Install Dependencies:**
