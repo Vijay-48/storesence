@@ -219,7 +219,16 @@ class CartProvider extends ChangeNotifier {
 
       return transaction;
     } catch (e) {
-      return null;
+      print('Checkout error: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') ||
+          errorStr.contains('network is unreachable') ||
+          errorStr.contains('connection failed')) {
+        throw Exception(
+          'Network error: Please check your internet connection.',
+        );
+      }
+      throw Exception('Payment failed: ${e.toString()}');
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -187,14 +187,26 @@ class PaymentScreen extends StatelessWidget {
 
     if (store == null) return;
 
-    final transaction = await cart.checkout();
+    try {
+      final transaction = await cart.checkout();
 
-    if (transaction != null && context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/payment-success',
-        (route) => route.settings.name == '/store-discovery',
-      );
+      if (transaction != null && context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/payment-success',
+          (route) => route.settings.name == '/store-discovery',
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 }

@@ -70,8 +70,20 @@ class AuthService {
         return _currentUser;
       }
       return null;
+    } on AuthException catch (e) {
+      print('Login auth error: $e');
+      throw Exception(e.message);
     } catch (e) {
       print('Login error: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') ||
+          errorStr.contains('network is unreachable') ||
+          errorStr.contains('connection failed') ||
+          errorStr.contains('clientexception')) {
+        throw Exception(
+          'Network error: Please check your internet connection and try again.',
+        );
+      }
       throw Exception('Login failed: ${e.toString()}');
     }
   }
@@ -91,7 +103,7 @@ class AuthService {
           'full_name': name,
           'role': role == UserRole.storeManager ? 'manager' : 'customer',
         },
-        emailRedirectTo: 'io.supabase.flutterdemo://login-callback',
+        emailRedirectTo: 'storesence://auth-callback',
       );
 
       if (response.user != null) {
@@ -99,8 +111,20 @@ class AuthService {
         return _currentUser;
       }
       return null;
+    } on AuthException catch (e) {
+      print('Sign up auth error: $e');
+      throw Exception(e.message);
     } catch (e) {
       print('Sign up error: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') ||
+          errorStr.contains('network is unreachable') ||
+          errorStr.contains('connection failed') ||
+          errorStr.contains('clientexception')) {
+        throw Exception(
+          'Network error: Please check your internet connection and try again.',
+        );
+      }
       throw Exception('Sign up failed: ${e.toString()}');
     }
   }
