@@ -1,0 +1,75 @@
+database password: StoreSecure@2345
+Project name: StoreSence
+
+anon public = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0amlvZXFlbW1pb3plb2l3ZXFyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcxNzI3MTcsImV4cCI6MjA4Mjc0ODcxN30.19jVmuSzOelKQRxUKWD1C21GZXls-FEdhb8vfGzpspE
+service_role secret = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0amlvZXFlbW1pb3plb2l3ZXFyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NzE3MjcxNywiZXhwIjoyMDgyNzQ4NzE3fQ.XZX6ciil05isKbKR7g_3a3Q7LmyIUM9efcheOOLFUOc
+storesecure=sb_publishable_6zF5pX0YNllhiNV03fh6iw_i0gq2eVF
+storesecure_secret=sb_secret_QlP2iXi--nQR-5gYu76s_Q_mujHKqWP
+JWT Signing Key = 486be953-df46-41f9-be32-74151286977e
+
+NEXT_PUBLIC_SUPABASE_URL=https://atjioeqemmiozeoiweqr.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=sb_publishable_6zF5pX0YNllhiNV03fh6iw_i0gq2eVF
+
+
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://atjioeqemmiozeoiweqr.supabase.co',
+    anonKey: 'sb_publishable_6zF5pX0YNllhiNV03fh6iw_i0gq2eVF',
+  );
+  runApp(MyApp());
+}
+        
+
+
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Todos',
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _future = Supabase.instance.client
+      .from('todos')
+      .select();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final todos = snapshot.data!;
+          return ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: ((context, index) {
+              final todo = todos[index];
+              return ListTile(
+                title: Text(todo['name']),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
+}
